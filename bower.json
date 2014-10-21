@@ -1,0 +1,24 @@
+{
+  "name": "resm.socket.io",
+  "version": "0.0.0",
+  "authors": [
+    "John Wright <johngeorge.wright@gmail.com>"
+  ],
+  "description": "A RESM layer for Socket.io",
+  "main": "resm.socket.io.js",
+  "keywords": [
+    "RESM",
+    "Socket.io"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "build",
+    "lib",
+    "node_modules",
+    "package.json",
+    "src",
+    "test"
+  ]
+}
