@@ -2,13 +2,13 @@
   "name": "resm.socket.io",
   "version": "0.0.0",
   "description": "A RESM layer for Socket.io",
-  "main": "build/server.js",
+  "main": "build/Server.js",
   "scripts": {
     "test": "mocha --check-leaks --recursive --compilers ls:LiveScript --ui tdd",
     "test-watch": "mocha --check-leaks -w -G --inline-diffs --prof --recursive --watch-extensions ls --compilers ls:LiveScript --ui tdd -R min",
     "clean": "rm -rf build dist",
     "compile": "lsc -cbo build src",
-    "browserify": "mkdir dist && browserify -o dist/Client.js build/Client.js",
+    "browserify": "mkdir dist && browserify --standalone RESM -o dist/Client.js build/Client.js",
     "minify": "uglifyjs -mo dist/Client.min.js --source-map dist/Client.min.js.map build/Client.js",
     "prepublish": "npm run clean && npm run compile && npm run browserify && npm run minify",
     "setup-pre-commit": "rm -f .git/hooks/pre-commit && ln -s ../../git-hooks/pre-commit.sh .git/hooks/pre-commit"

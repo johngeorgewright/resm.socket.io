@@ -62,8 +62,7 @@ Using bower will install the just the client library.
 
 ```js
 // users.js
-var RESM = require('Client'),
-    socket = io(),
+var socket = io(),
     users = new RESM(socket);
 
 function displayUsers(users) {
