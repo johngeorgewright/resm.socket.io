@@ -28,14 +28,10 @@ class Messenger
     @callback null, data
 
   handle-processing-error: (code)!~>
-    new ProcessingError
-      ..code = code
-      @callback ..
+    @callback new ProcessingError code
 
   handle-request-error: (code)!~>
-    new RequestError
-      ..code = code
-      @callback ..
+    @callback new RequestError code
 
 module.exports = Messenger
 
