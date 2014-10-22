@@ -3,13 +3,13 @@ require! \./Messenger
 class Model
   (@emitter, @singular, @plural)->
     @action-types =
-      list: "list #{@plural}"
-      retrieve: "retrieve #{@singular}"
-      update: "update #{@singular}"
-      delete: "delete #{@singular}"
-    @responseTypes =
-      list: "list of #{@plural}"
-      retrieve: @singular
+      list: "list #{plural}"
+      retrieve: "retrieve #{singular}"
+      update: "update #{singular}"
+      delete: "delete #{singular}"
+    @response-types =
+      list: "list of #{plural}"
+      retrieve: singular
 
   create-messenger: (dispatch-type, response-type, data, callback)->
     new Messenger @emitter, dispatch-type, response-type, data, callback

@@ -1,26 +1,30 @@
 require! \./Model
 
 class Server extends Model
-  listener = (amend-data, fn, data)!-->
-    amend-data data, fn
+  listener = (amend-data, emit, data)!-->
+    amend-data data, emit
 
-  responder: (type, response-type, fn)!->
+  respond-to: (type, response-type, fn)!-->
     responder = (data)!~> @emitter.emit response-type, data
     @emitter.on type, listener(fn, responder)
 
-  broadcaster: (type, fn)!->
+  broadcast-when: (type, fn)!->
     broadcaster = (data)!~> @emitter.io.emit type, data
     @emitter.on type, listener(fn, broadcaster)
 
   listing: (fn)!->
-    @responder @action-types.list, @response-types.list, fn
+    respond-with = @respond-to @action-types.list
+    respond-with @response-types.list, fn
 
   retrieving: (fn)!->
-    @responder @action-types.retrieve, @response-types.retrieve, fn
+    respond-with = @respond-to @action-types.retrieve
+    respond-with @response-types.retrieve, fn
 
   updating: (fn)->
-    @broadcaster @action-types.update, fn
+    @broadcast-when @action-types.update, fn
 
   deleting: (fn)->
-    @broadcaster @action-types.delete, fn
+    @broadcast-when @action-types.delete, fn
+
+module.exports = Server
 

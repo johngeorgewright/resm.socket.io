@@ -4,24 +4,24 @@ const PROCESSING_ERROR = 'processing error'
 const REQUEST_ERROR = 'request error'
 
 class Messenger
+  listeners = (messenger)->
+    [
+      [messenger.response-type, messenger.handle-response]
+      [PROCESSING_ERROR, messenger.handle-processing-error]
+      [REQUEST_ERROR, messenger.handle-request-error]
+    ]
+
   (@emitter, @dispatch-type, @response-type, @data, @callback)->
 
   dispatch: !->
     for type in [@response-type, PROCESSING_ERROR, REQUEST_ERROR]
-      @emitter.once it, @remove-listeners
-    messages =
-      * [@response-type, @handle-response]
-      * [PROCESSING_ERROR, @handle-processing-error]
-      * [REQUEST_ERROR, @handle-request-error]
-    for message in messages
+      @emitter.once type, @remove-listeners
+    for message in listeners(@)
       @emitter.once ...message
+    @emitter.emit @dispatch-type, @data
 
   remove-listeners: !~>
-    listeners =
-      * [@response-type, @handle-response]
-      * [PROCESSING_ERROR, @handle-processing-error]
-      * [REQUEST_ERROR, @handle-request-error]
-    for listener in listeners
+    for listener in listeners(@)
       @emitter.remove-listener ...listener
 
   handle-response: (data)!~>
@@ -35,7 +35,7 @@ class Messenger
   handle-request-error: (code)!~>
     new RequestError
       ..code = code
-      @callback err
+      @callback ..
 
 module.exports = Messenger
 

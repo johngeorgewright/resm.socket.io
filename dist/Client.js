@@ -6,7 +6,7 @@ Client = (function(superclass){
   var dispatchBroadcastableAction, prototype = extend$((import$(Client, superclass).displayName = 'Client', Client), superclass).prototype, constructor = Client;
   dispatchBroadcastableAction = function(client, type, data, callback){
     var messenger;
-    messenger = client.messenger(type, type, data, callback);
+    messenger = client.createMessenger(type, type, data, callback);
     return messenger.dispatch();
   };
   prototype.update = function(data, callback){
@@ -43,7 +43,10 @@ PROCESSING_ERROR = 'processing error';
 REQUEST_ERROR = 'request error';
 Messenger = (function(){
   Messenger.displayName = 'Messenger';
-  var prototype = Messenger.prototype, constructor = Messenger;
+  var listeners, prototype = Messenger.prototype, constructor = Messenger;
+  listeners = function(messenger){
+    return [[messenger.responseType, messenger.handleResponse], [PROCESSING_ERROR, messenger.handleProcessingError], [REQUEST_ERROR, messenger.handleRequestError]];
+  };
   function Messenger(emitter, dispatchType, responseType, data, callback){
     this.emitter = emitter;
     this.dispatchType = dispatchType;
@@ -55,24 +58,23 @@ Messenger = (function(){
     this.handleResponse = bind$(this, 'handleResponse', prototype);
     this.removeListeners = bind$(this, 'removeListeners', prototype);
   }
-  prototype.dispatch = function(it){
-    var i$, ref$, len$, type, messages, message;
+  prototype.dispatch = function(){
+    var i$, ref$, len$, type, message, ref1$;
     for (i$ = 0, len$ = (ref$ = [this.responseType, PROCESSING_ERROR, REQUEST_ERROR]).length; i$ < len$; ++i$) {
       type = ref$[i$];
-      this.emitter.once(it, this.removeListeners);
+      this.emitter.once(type, this.removeListeners);
     }
-    messages = [[this.responseType, this.handleResponse], [PROCESSING_ERROR, this.handleProcessingError], [REQUEST_ERROR, this.handleRequestError]];
-    for (i$ = 0, len$ = messages.length; i$ < len$; ++i$) {
-      message = messages[i$];
-      (ref$ = this.emitter).once.apply(ref$, message);
+    for (i$ = 0, len$ = (ref$ = listeners(this)).length; i$ < len$; ++i$) {
+      message = ref$[i$];
+      (ref1$ = this.emitter).once.apply(ref1$, message);
     }
+    this.emitter.emit(this.dispatchType, this.data);
   };
   prototype.removeListeners = function(){
-    var listeners, i$, len$, listener, ref$;
-    listeners = [[this.responseType, this.handleResponse], [PROCESSING_ERROR, this.handleProcessingError], [REQUEST_ERROR, this.handleRequestError]];
-    for (i$ = 0, len$ = listeners.length; i$ < len$; ++i$) {
-      listener = listeners[i$];
-      (ref$ = this.emitter).removeListener.apply(ref$, listener);
+    var i$, ref$, len$, listener, ref1$;
+    for (i$ = 0, len$ = (ref$ = listeners(this)).length; i$ < len$; ++i$) {
+      listener = ref$[i$];
+      (ref1$ = this.emitter).removeListener.apply(ref1$, listener);
     }
   };
   prototype.handleResponse = function(data){
@@ -88,7 +90,7 @@ Messenger = (function(){
     var x$;
     x$ = new RequestError;
     x$.code = code;
-    this.callback(err);
+    this.callback(x$);
   };
   return Messenger;
 }());
@@ -108,14 +110,14 @@ Model = (function(){
     this.singular = singular;
     this.plural = plural;
     this.actionTypes = {
-      list: "list " + this.plural,
-      retrieve: "retrieve " + this.singular,
-      update: "update " + this.singular,
-      'delete': "delete " + this.singular
+      list: "list " + plural,
+      retrieve: "retrieve " + singular,
+      update: "update " + singular,
+      'delete': "delete " + singular
     };
     this.responseTypes = {
-      list: "list of " + this.plural,
-      retrieve: this.singular
+      list: "list of " + plural,
+      retrieve: singular
     };
   }
   prototype.createMessenger = function(dispatchType, responseType, data, callback){
