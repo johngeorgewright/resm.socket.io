@@ -54,7 +54,7 @@ Using bower will install the just the client library.
     <ui id="user-list"></ul>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/bower_components/resm.socket.io/dist/Client.min.js"></script>
+    <script src="/bower_components/resm.socket.io/dist/resm.soccket.io.min.js"></script>
     <script src="/users.js"></script>
   </body>
 </html>
