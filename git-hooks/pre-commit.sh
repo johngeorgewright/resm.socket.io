@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
-npm run prepublish && git add dist
+npm test && npm run prepublish && git add dist
 
