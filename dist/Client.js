@@ -105,6 +105,7 @@ Model = (function(){
     this.plural = plural;
     this.actionTypes = {
       list: "list " + plural,
+      create: "create " + singular,
       retrieve: "retrieve " + singular,
       update: "update " + singular,
       'delete': "delete " + singular

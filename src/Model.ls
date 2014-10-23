@@ -4,6 +4,7 @@ class Model
   (@emitter, @singular, @plural)->
     @action-types =
       list: "list #{plural}"
+      create: "create #{singular}"
       retrieve: "retrieve #{singular}"
       update: "update #{singular}"
       delete: "delete #{singular}"

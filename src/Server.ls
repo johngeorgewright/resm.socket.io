@@ -1,10 +1,13 @@
-require! \./Model
+require! <[ ./Model ./ProcessingError ./RequestError ]>
 
 class Server extends Model
   listener = (amend-data, emit, data)!-->
     amend-data data, emit
 
-  respond-to: (type, response-type, fn)!-->
+  error = (err)->
+
+
+  respond-to: (type, response-type, fn)!~~>
     responder = (data)!~> @emitter.emit response-type, data
     @emitter.on type, listener(fn, responder)
 
@@ -19,6 +22,9 @@ class Server extends Model
   retrieving: (fn)!->
     respond-with = @respond-to @action-types.retrieve
     respond-with @response-types.retrieve, fn
+
+  creating: (fn)->
+    @broadcast-when @action-types.create, fn
 
   updating: (fn)->
     @broadcast-when @action-types.update, fn
