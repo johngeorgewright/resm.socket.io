@@ -10,8 +10,8 @@
     "compile": "lsc -cbo build src",
     "browserify": "mkdir dist && browserify --standalone RESM -o dist/resm.socket.io.js build/Client.js",
     "minify": "uglifyjs -mo dist/resm.socket.io.min.js --source-map dist/resm.socket.io.min.js.map dist/resm.socket.io.js",
-    "prepublish": "npm run clean && npm run compile && npm run browserify && npm run minify",
-    "setup-pre-commit": "rm -f .git/hooks/pre-commit && ln -s ../../git-hooks/pre-commit.sh .git/hooks/pre-commit"
+    "prepublish": "npm test && npm run clean && npm run compile && npm run browserify && npm run minify",
+    "setup-pre-commit": "rm -f .git/hooks/pre-push && ln -s ../../git-hooks/pre-push.sh .git/hooks/pre-push"
   },
   "keywords": [
     "RESM",
