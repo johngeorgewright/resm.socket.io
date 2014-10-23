@@ -9,7 +9,7 @@
     "clean": "rm -rf build dist",
     "compile": "lsc -cbo build src",
     "browserify": "mkdir dist && browserify --standalone RESM -o dist/resm.socket.io.js build/Client.js",
-    "minify": "uglifyjs -mo dist/resm.socket.io.min.js --source-map dist/resm.socket.io.min.js.map dist/resm.socket.io.js",
+    "minify": "uglifyjs -mo dist/resm.socket.io.min.js --source-map-url resm.socket.io.min.js.map --source-map dist/resm.socket.io.min.js.map dist/resm.socket.io.js",
     "prepublish": "npm test && npm run clean && npm run compile && npm run browserify && npm run minify",
     "remove-git-hooks": "rm -f .git/hooks/pre-commit",
     "setup-git-hooks": "npm run remove-git-hooks && ln -s ../../git-hooks/pre-commit.sh .git/hooks/pre-commit"
