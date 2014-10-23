@@ -5,7 +5,7 @@
   "main": "build/Server.js",
   "scripts": {
     "test": "mocha --check-leaks --recursive --compilers ls:LiveScript --ui tdd",
-    "test-watch": "mocha --check-leaks -w -G --inline-diffs --prof --recursive --watch-extensions ls --compilers ls:LiveScript --ui tdd -R min",
+    "test-watch": "mocha --check-leaks -w -G --inline-diffs --recursive --watch-extensions ls --compilers ls:LiveScript --ui tdd -R min",
     "clean": "rm -rf build dist",
     "compile": "lsc -cbo build src",
     "browserify": "mkdir dist && browserify --standalone RESM -o dist/resm.socket.io.js build/Client.js",
