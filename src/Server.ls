@@ -19,25 +19,26 @@ class Server extends Model
     @emitter.on type, callback
 
   broadcast-when: (type, fn)!->
-    broadcaster = (data)!~> @emitter.io.emit type, data
+    broadcaster = (data)!~>
+      @emitter.server.emit type, data
     callback = listener fn, broadcaster, errorEmitter(@emitter)
     @emitter.on type, callback
 
-  listing: (fn)!->
+  list: (fn)!->
     respond-with = @respond-to @action-types.list
     respond-with @response-types.list, fn
 
-  retrieving: (fn)!->
+  retrieve: (fn)!->
     respond-with = @respond-to @action-types.retrieve
     respond-with @response-types.retrieve, fn
 
-  creating: (fn)!->
+  create: (fn)!->
     @broadcast-when @action-types.create, fn
 
-  updating: (fn)!->
+  update: (fn)!->
     @broadcast-when @action-types.update, fn
 
-  deleting: (fn)!->
+  delete: (fn)!->
     @broadcast-when @action-types.delete, fn
 
 module.exports = Server

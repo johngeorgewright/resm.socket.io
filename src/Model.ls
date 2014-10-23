@@ -2,6 +2,7 @@ require! \./Messenger
 
 class Model
   (@emitter, @singular, @plural)->
+    @plural or= "#{@singular}s"
     @action-types =
       list: "list #{plural}"
       create: "create #{singular}"
@@ -23,5 +24,6 @@ class Model
     messenger = @create-messenger @action-types.retrieve, @response-types.retrieve, data, callback
     messenger.dispatch!
 
+Model.Messenger = Messenger
 module.exports = Model
 

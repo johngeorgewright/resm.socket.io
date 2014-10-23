@@ -1,43 +1,80 @@
 require! {
   chai
   sinon
+  events: {EventEmitter}
   \sinon-chai
   \../src/Client
+  \../src/Messenger
 }
 
 chai.use sinon-chai
 {expect} = chai
 
 suite \Client ->
-  client = messenger = null
+  client = emitter = messenger = null
 
   setup ->
-    client := new Client {} \singular \plural
-    messenger := dispatch: sinon.spy!
-    sinon.stub client, \createMessenger .returns messenger
+    emitter := new EventEmitter
+    client := new Client emitter, \user \users
 
-  <[ \createMessenger list retrieve ]>.for-each (method)->
-    test "inherits the \"#method\" method" ->
-      expect client .to.have.property method
-      expect client[method] .to.be.a \function
-
-  suite \.update ->
+  suite \.create-messenger ->
+    callback = messenger = null
     setup ->
-      client.update \data \fn
+      callback := sinon.spy!
+      messenger := client.create-messenger \request \response \data callback
+    test 'returns a messenger' ->
+      expect messenger .to.be.instanceof Messenger
+    test 'assigns the emitter to the messenger' ->
+      expect messenger .to.have.property \emitter emitter
+    test 'assigns the dispatch type to the messenger' ->
+      expect messenger .to.have.property \dispatchType \request
+    test 'assigns the response type to the messenger' ->
+      expect messenger .to.have.property \responseType \response
+    test 'assigns the data to the messenger' ->
+      expect messenger .to.have.property \data \data
+    test 'assigns the callback to the messenger' ->
+      expect messenger .to.have.property \callback callback
 
-    test 'creates a messenger' ->
-      expect client.create-messenger .to.have.been.called-with-exactly 'update singular' 'update singular' \data \fn
-
-    test 'dispatches the message' ->
-      expect messenger.dispatch .to.have.been.called
-
-  suite \.delete ->
+  suite \dispatching ->
+    callback = null
     setup ->
-      client.delete \data \fn
+      callback := sinon.spy!
+      messenger := dispatch: sinon.spy!
+      sinon.stub client, \createMessenger .returns messenger
 
-    test 'creates a messenger' ->
-      expect client.create-messenger .to.have.been.called-with-exactly 'delete singular' 'delete singular' \data \fn
+    suite \.list ->
+      setup ->
+        client.list callback, \data
+      test 'creates a messenger' ->
+        expect client.create-messenger .to.have.been.called-with-exactly 'list users' 'list of users' \data callback
+      test 'dispatched the messenger' ->
+        expect messenger.dispatch .to.have.been.called
 
-    test 'dispatches the message' ->
-      expect messenger.dispatch .to.have.been.called
+    suite \.retrieve ->
+      setup ->
+        client.retrieve \data callback
+      test 'creates a messenger' ->
+        expect client.create-messenger .to.have.been.called-with-exactly 'retrieve user' 'user' \data callback
+      test 'dispatched the messenger' ->
+        expect messenger.dispatch .to.have.been.called
+
+    suite \.update ->
+      setup ->
+        client.update \data \fn
+
+      test 'creates a messenger' ->
+        expect client.create-messenger .to.have.been.called-with-exactly 'update user' 'update user' \data \fn
+
+      test 'dispatches the message' ->
+        expect messenger.dispatch .to.have.been.called
+
+    suite \.delete ->
+      setup ->
+        client.delete \data \fn
+
+      test 'creates a messenger' ->
+        expect client.create-messenger .to.have.been.called-with-exactly 'delete user' 'delete user' \data \fn
+
+      test 'dispatches the message' ->
+        expect messenger.dispatch .to.have.been.called
 

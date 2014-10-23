@@ -16,9 +16,9 @@ suite \Server ->
   setup ->
     callback := sinon.spy!
     emitter := new EventEmitter
-    emitter.io = new EventEmitter
+    emitter.server = new EventEmitter
     sinon.stub emitter
-    sinon.stub emitter.io
+    sinon.stub emitter.server
     server := new Server emitter, \record \records
   get-listener = ->
     emitter.on.first-call.args.1
@@ -60,7 +60,7 @@ suite \Server ->
       expect callback.first-call.args.2 .to.be.a \function
     test 'we can broadcast with different data' ->
       callback.call-arg-with 1 \new-data
-      expect emitter.io.emit .to.have.been.called-with-exactly \action \new-data
+      expect emitter.server.emit .to.have.been.called-with-exactly \action \new-data
     test 'we can respond with an error' ->
       err = new RequestError
       callback.call-arg-with 2 err
@@ -71,25 +71,25 @@ suite \Server ->
     setup ->
       responder := sinon.spy!
       sinon.stub server, \respondTo .returns responder
-    test '.listing' ->
-      server.listing callback
+    test '.list' ->
+      server.list callback
       expect server.respond-to .to.have.been.called-with-exactly 'list records'
       expect responder .to.have.been.called-with-exactly 'list of records' callback
-    test '.retrieving' ->
-      server.retrieving callback
+    test '.retrieve' ->
+      server.retrieve callback
       expect server.respond-to .to.have.been.called-with-exactly 'retrieve record'
       expect responder .to.have.been.called-with-exactly 'record' callback
 
-  suite 'broadcasting methods' ->
+  suite 'broadcast methods' ->
     setup ->
       sinon.stub server, \broadcastWhen
-    test '.creating' ->
-      server.creating callback
+    test '.create' ->
+      server.create callback
       expect server.broadcast-when .to.have.been.called-with-exactly 'create record' callback
-    test '.updating' ->
-      server.updating callback
+    test '.update' ->
+      server.update callback
       expect server.broadcast-when .to.have.been.called-with-exactly 'update record' callback
-    test '.deleting' ->
-      server.deleting callback
+    test '.delete' ->
+      server.delete callback
       expect server.broadcast-when .to.have.been.called-with-exactly 'delete record' callback
 
