@@ -12,30 +12,30 @@ The NPM module includes all files, but is essentially there for your socket.io s
 
 ```js
 var RESM = require('resm.socket.io'),
+    ProcessingError = require('resm.socket.io/RequestError'),
     app = require('express')(),
     http = require('http').Server(app),
     io = require('socket.io')(http);
 
 io.on('connection', function (socket) {
   var users = new RESM(socket, 'user', 'users');
-  
-  users.listing(function (query, respond) {
-    var list = [{
-      id: 1,
-      name: 'A user'
-    }, {
-      id: 2,
-      name: 'Another user'
-    }];
-    respond(list);
+
+  users.listing(function (query, respond, error) {
+    respond([
+      {id: 1, name: 'A user'},
+      {id: 2, name: 'Another user'}
+    ]);
   });
-  
-  users.retrieving(function (id, respond) {
+
+  users.retrieving(function (id, respond, error) {
     var user = {id:1, name:'A user'};
-    resoind(user);
+    respond(user);
   });
-  
-  users.deleting(...);
+
+  users.deleting(function (id, broadcast, error) {
+    error new RequestError(23);
+  });
+
   users.updating(...);
 });
 ```

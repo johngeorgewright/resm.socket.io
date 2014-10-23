@@ -144,7 +144,7 @@ ProcessingError = (function(superclass){
   var prototype = extend$((import$(ProcessingError, superclass).displayName = 'ProcessingError', ProcessingError), superclass).prototype, constructor = ProcessingError;
   function ProcessingError(code){
     var msg;
-    this.code = code;
+    this.code = code != null ? code : 0;
     msg = MESSAGES[code] != null ? MESSAGES[code] : 'Unknown Error';
     ProcessingError.superclass.call(this, msg);
   }
@@ -189,7 +189,7 @@ RequestError = (function(superclass){
   var prototype = extend$((import$(RequestError, superclass).displayName = 'RequestError', RequestError), superclass).prototype, constructor = RequestError;
   function RequestError(code){
     var msg;
-    this.code = code;
+    this.code = code != null ? code : 0;
     msg = MESSAGES[code] != null ? MESSAGES[code] : 'Unknown Error';
     RequestError.superclass.call(this, msg);
   }
