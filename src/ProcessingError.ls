@@ -5,7 +5,7 @@ MESSAGES =
   8: 'Loop Detected'
 
 class ProcessingError extends Error
-  (@code)->
+  (@code = 0)->
     msg = if MESSAGES[code]? then MESSAGES[code] else 'Unknown Error'
     super msg
 

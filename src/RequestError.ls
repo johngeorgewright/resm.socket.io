@@ -19,7 +19,7 @@ MESSAGES =
   51: 'Unavailable For Legal Reasons'
 
 class RequestError extends Error
-  (@code)->
+  (@code = 0)->
     msg = if MESSAGES[code]? then MESSAGES[code] else 'Unknown Error'
     super msg
 
