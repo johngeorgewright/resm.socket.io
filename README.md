@@ -1,6 +1,8 @@
 resm.socket.io
 ==============
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/johngeorgewright/resm.socket.io.svg)](https://greenkeeper.io/)
+
 A RESM layer for Socket.io.
 
 **Currently in beta**
